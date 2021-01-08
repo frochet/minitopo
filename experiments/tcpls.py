@@ -17,7 +17,7 @@ class TCPLSParameter(RandomFileExperiment):
     def __init__(self, experiment_parameter_filename):
         super(TCPLSParameter, self).__init__(experiment_parameter_filename)
         self.default_parameters.update({
-            TCPLSParameter.FAILOVER : "off",
+            TCPLSParameter.FAILOVER : "on",
             TCPLSParameter.CLIENT_BACKUP_IF: "none",
             TCPLSParameter.SERVER_BACKUP_IF: "none",
             TCPLSParameter.GOODPUT_FILE: "none",
@@ -75,7 +75,6 @@ class TCPLS(RandomFileExperiment):
         self.top.command_to(self.topo_confif.server, self.getServerCmd)
         # ensure the server has started -- 1 sec should be enough
         self.topo.command_to(self.topo_config.client, "sleep 1")
-        self.topo.command_to(self.topo_config.client, 
         self.topo.command_to(self.topo_config.client, self.getClientCmd)
         if self.perturbationType == "drop" or self.perturbationType == "rst":
             if self.perturbationType == "drop":
