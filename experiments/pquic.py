@@ -7,7 +7,6 @@ class PQUICParameter(ExperimentParameter):
     PLUGINS = "pquicPlugins"
     CLIENT_PLUGINS = "pquicClientPlugins"
     SERVER_PLUGINS = "pquicServerPlugins"
-    SIZE = "pquicSize"
 
     def __init__(self, experiment_parameter_filename):
         super(PQUICParameter, self).__init__(experiment_parameter_filename)
@@ -39,7 +38,6 @@ class PQUIC(Experiment):
         self.plugins = self.experiment_parameter.get(PQUICParameter.PLUGINS)
         self.client_plugins = self.experiment_parameter.get(PQUICParameter.CLIENT_PLUGINS)
         self.server_plugins = self.experiment_parameter.get(PQUICParameter.SERVER_PLUGINS)
-        self.size = int(self.experiment_parameter.get(PQUICParameter.SIZE))
 
     def prepare(self):
         super(PQUIC, self).prepare()

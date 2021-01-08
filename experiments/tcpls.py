@@ -17,11 +17,11 @@ class TCPLSParameter(RandomFileExperiment):
     def __init__(self, experiment_parameter_filename):
         super(TCPLSParameter, self).__init__(experiment_parameter_filename)
         self.default_parameters.update({
-            TCPLSParameter.FAILOVER : "off"
-            TCPLSParameter.CLIENT_BACKUP_IF: "none"
-            TCPLSParameter.SERVER_BACKUP_IF: "none"
-            TCPLSParameter.GOODPUT_FILE: "none"
-            TCPLSParameter.INTERVAL: 5
+            TCPLSParameter.FAILOVER : "off",
+            TCPLSParameter.CLIENT_BACKUP_IF: "none",
+            TCPLSParameter.SERVER_BACKUP_IF: "none",
+            TCPLSParameter.GOODPUT_FILE: "none",
+            TCPLSParameter.INTERVAL: 5,
         })
 
 class TCPLS(RandomFileExperiment):
