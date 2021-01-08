@@ -28,7 +28,7 @@ class TCPLSParameter(RandomFileExperiment):
 class TCPLS(RandomFileExperiment):
     NAME = "tcpls"
     PARAMETER_CLASS = TCPLSParameter
-    CLI = "~/picotcpls/cli
+    CLI = "~/picotcpls/cli"
     SERVER_LOG = "tcpls_server.log"
     CLINET_LOG = "tcpls_client.log"
     CERT = "~/picotcpls/t/assets/server.crt"
