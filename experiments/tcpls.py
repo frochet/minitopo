@@ -45,12 +45,11 @@ class TCPLS(RandomFileExperiment):
             self.failover_flag = "-f"
         else:
             self.failover_flag = ""
-            if self.goodputFile != "none":
-                self.goodput_flag = "-g "+self.goodputFile
-            else:
-                self.goodput_flag = ""
-                self.interval = self.experiment_parameter.get(TCPLSParameter.INTERVAL)
-                self.drop_script = self.experiment_parameter.
+        if self.goodputFile != "none":
+            self.goodput_flag = "-g "+self.goodputFile
+        else:
+            self.goodput_flag = ""
+        self.interval = self.experiment_parameter.get(TCPLSParameter.INTERVAL)
 
     def prepare(self):
         super(TCPLS, self).prepare()
