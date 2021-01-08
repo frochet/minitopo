@@ -3,7 +3,7 @@ from topos.multi_interface_multi_client import MultiInterfaceMultiClientConfig
 import os
 import time
 
-class TCPLSParameter(RandomFileExperiment):
+class TCPLSParameter(ExperimentParameter):
     #can be on or off
     FAILOVER = "failover"
     # one of the client/server interface name
