@@ -86,7 +86,7 @@ class TCPLS(RandomFileExperiment):
                 bin = TCPLS.DROP_SCRIPT
             else:
                 bin = TCPLS.RST_SCRIPT
-            self.topo.command_to(self.top_config.router, ""+bin+" "+self.interval+" &")
+            self.topo.command_to(self.topo_config.router, ""+bin+" "+self.interval+" &")
             time.sleep(70)
 
         elif self.perturbationType == "ifupdown":
