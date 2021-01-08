@@ -21,7 +21,7 @@ class TCPLSParameter(ExperimentParameter):
             TCPLSParameter.CLIENT_BACKUP_IF: "none",
             TCPLSParameter.SERVER_BACKUP_IF: "none",
             TCPLSParameter.GOODPUT_FILE: "none",
-            TCPLSParameter.pperturbartionType: "drop",
+            TCPLSParameter.PERTURBATION: "drop",
             TCPLSParameter.INTERVAL: 5,
         })
 
