@@ -30,7 +30,7 @@ class TCPLS(RandomFileExperiment):
     PARAMETER_CLASS = TCPLSParameter
     CLI = "~/picotcpls/cli"
     SERVER_LOG = "tcpls_server.log"
-    CLINET_LOG = "tcpls_client.log"
+    CLIENT_LOG = "tcpls_client.log"
     CERT = "~/picotcpls/t/assets/server.crt"
     KEY = "~/picotcpls/t/assets/server.key"
     DROP_SCRIPT = "~/picotcpls/t/ipmininet/tcp_drop.sh"
@@ -78,6 +78,7 @@ class TCPLS(RandomFileExperiment):
     def run(self):
         self.top.command_to(self.topo_confif.server, self.getServerCmd)
         # ensure the server has started -- 1 sec should be enough
+        self.topo.command_to(self.topo_config.client, "tcpdump -i any host 10.0.0.1 and 10.0.1.1 > client_tcpdump.log"
         self.topo.command_to(self.topo_config.client, "sleep 1")
         self.topo.command_to(self.topo_config.client, self.getClientCmd)
         if self.perturbationType == "drop" or self.perturbationType == "rst":
