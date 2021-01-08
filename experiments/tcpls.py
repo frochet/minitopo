@@ -36,6 +36,10 @@ class TCPLS(RandomFileExperiment):
     DROP_SCRIPT = "~/picotcpls/t/ipmininet/tcp_drop.sh"
     RST_SCRIPT = "~/picotcpls/t/ipmininet/tcp_reset_mininet.sh"
 
+    def __init__(self, experiment_parameter_filename, topo, topo_config):
+        super(TCPLS, self).__init__(experiment_parameter_filename, topo, topo_config)
+        self.load_parameters()
+
     def load_parameter(self):
         super(TCPLS, self).load_parameters()
         self.failover = self.experiment_parameter.get(TCPLSParameter.FAILOVER)
