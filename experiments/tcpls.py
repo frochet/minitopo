@@ -40,7 +40,7 @@ class TCPLS(RandomFileExperiment):
         super(TCPLS, self).__init__(experiment_parameter_filename, topo, topo_config)
         self.load_parameters()
 
-    def load_parameter(self):
+    def load_parameters(self):
         super(TCPLS, self).load_parameters()
         self.failover = self.experiment_parameter.get(TCPLSParameter.FAILOVER)
         self.goodputFile = self.experiment_parameter.get(TCPLSParameter.GOODPUT_FILE)
@@ -65,22 +65,28 @@ class TCPLS(RandomFileExperiment):
     def getServerCmd(self):
         IP_PRIMARY = self.topo_config.get_server_ip(0)
         IP_SECONDARY = self.topo_config.get_server_ip(1)
-
-        return ""+TCPLS.CLI+" -t "+self.failover_flag+" -T simple_transfert -k "+TCPLS.KEY+" -c "+TCPLS.CERT+" -i "+self.file+" -Z "+IP_SECONDARY+" "+IP_PRIMARY+" 4443 &"
+        s =  ""+TCPLS.CLI+" -t "+self.failover_flag+" -T simple_transfer -k "+TCPLS.KEY+" -c "+TCPLS.CERT+" -i "+self.file+" -z "+IP_SECONDARY+" "+IP_PRIMARY+" 4443 &"
+        print(s)
+        return s
 
     def getClientCmd(self):
         IP_PRIMARY = self.topo_config.get_server_ip(0)
         IP_SECONDARY = self.topo_config.get_server_ip(1)
+        
+        CLIENT_PRIMARY = self.topo_config.get_client_ip(0)
+        CLIENT_SECONDARY = self.topo_config.get_client_ip(1)
 
-        return ""+TCPLS.CLI+" -t "+self.failover_flag+" "+self.goodput_flag+" -T simple_transfert -P "+IP_SECONDARY+" "+IP_PRIMARY+" 4443 &"
+        s= ""+TCPLS.CLI+" -t "+self.failover_flag+" "+self.goodput_flag+" -T simple_transfer -z "+CLIENT_PRIMARY+" -z "+CLIENT_SECONDARY+" -p "+IP_SECONDARY+" "+IP_PRIMARY+" 4443 &"
+        print(s)
+        return s
 
 
     def run(self):
-        self.topo.command_to(self.topo_confif.server, self.getServerCmd)
+        self.topo.command_to(self.topo_config.server, self.getServerCmd())
         # ensure the server has started -- 1 sec should be enough
-        self.topo.command_to(self.topo_config.client, "tcpdump -i any host 10.0.0.1 and 10.0.1.1 > client_tcpdump.log")
+        self.topo.command_to(self.topo_config.client, " tcpdump -i any -n -v host 10.1.0.1 or 10.1.1.1 &> client_tcpdump.log&")
         self.topo.command_to(self.topo_config.client, "sleep 1")
-        self.topo.command_to(self.topo_config.client, self.getClientCmd)
+        self.topo.command_to(self.topo_config.client, self.getClientCmd())
         if self.perturbationType == "drop" or self.perturbationType == "rst":
             if self.perturbationType == "drop":
                 bin = TCPLS.DROP_SCRIPT
@@ -107,4 +113,6 @@ class TCPLS(RandomFileExperiment):
 
     def clean(self):
         super(TCPLS, self).clean()
+        self.topo.command_to(self.topo_config.router, "iptables -F")
+
 
