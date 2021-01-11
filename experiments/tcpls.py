@@ -35,6 +35,7 @@ class TCPLS(RandomFileExperiment):
     KEY = "~/picotcpls/t/assets/server.key"
     DROP_SCRIPT = "~/picotcpls/t/ipmininet/tcp_drop.sh"
     RST_SCRIPT = "~/picotcpls/t/ipmininet/tcp_reset_mininet.sh"
+    IFUPDOWN_SCRIPT = "/tutorial/08_tcpls/ifupdown_client.sh"
 
     def __init__(self, experiment_parameter_filename, topo, topo_config):
         super(TCPLS, self).__init__(experiment_parameter_filename, topo, topo_config)
@@ -53,7 +54,10 @@ class TCPLS(RandomFileExperiment):
             self.goodput_flag = "-g "+self.goodputFile
         else:
             self.goodput_flag = ""
-        self.interval = self.experiment_parameter.get(TCPLSParameter.INTERVAL)
+        self.interval = int(self.experiment_parameter.get(TCPLSParameter.INTERVAL))
+    
+    def ping(self):
+        pass
 
     def prepare(self):
         super(TCPLS, self).prepare()
@@ -82,37 +86,28 @@ class TCPLS(RandomFileExperiment):
 
 
     def run(self):
+        self.topo.command_to(self.topo_config.client, "ip link set dev Client_0-eth1 multipath backup")
+        self.topo.command_to(self.topo_config.server, "ip link set dev Server_0-eth1 multipath backup")
+        #self.topo.command_to(self.topo_config.client, "ip route add 10.1.1.0/24 via 10.0.1.2 dev Client_0-eth1")
         self.topo.command_to(self.topo_config.server, self.getServerCmd())
         # ensure the server has started -- 1 sec should be enough
         self.topo.command_to(self.topo_config.client, " tcpdump -i any -n -v host 10.1.0.1 or 10.1.1.1 &> client_tcpdump.log&")
+
         self.topo.command_to(self.topo_config.client, "sleep 1")
         self.topo.command_to(self.topo_config.client, self.getClientCmd())
-        if self.perturbationType == "drop" or self.perturbationType == "rst":
-            if self.perturbationType == "drop":
-                bin = TCPLS.DROP_SCRIPT
-            else:
-                bin = TCPLS.RST_SCRIPT
-            self.topo.command_to(self.topo_config.router, ""+bin+" "+self.interval+" &")
-            time.sleep(70)
-
+        if self.perturbationType == "drop":
+            bin = TCPLS.DROP_SCRIPT
+        elif self.perturbationType == "rst":
+            bin = TCPLS.RST_SCRIPT
+            self.topo.command_to(self.topo_config.router, ""+bin+" "+str(self.interval)+" &")
         elif self.perturbationType == "ifupdown":
-            ## ifupdown of the server link to the R
-            nodelinks = [("bs_r2s_0_3", "Server_0"), ("bs_r2s_1_3","Server_0")]
-            i = 0
-            for _ in range(0, 70/self.interval):
-                index = i%2
-                index_next = (i+1)%2
-                self.topo.net.configLinkStatus(nodelinks[index][0],
-                                               nodelinks[index][1], "up")
-                self.topo.net.configLinkStatus(nodelinks[index_next][0],
-                                               nodelinks[index_next][1], "down")
-                i+=1
-                time.sleep(self.interval)
-
-
+            bin = TCPLS.IFUPDOWN_SCRIPT
+            self.topo.command_to(self.topo_config.client, ""+bin+" "+str(self.interval)+" &> ifupdown.log")
+        else:
+            print("does not know what to do with {}".format(self.perturbationType))
+        time.sleep(80)
 
     def clean(self):
         super(TCPLS, self).clean()
         self.topo.command_to(self.topo_config.router, "iptables -F")
-
 
