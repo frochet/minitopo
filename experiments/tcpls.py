@@ -35,7 +35,7 @@ class TCPLS(RandomFileExperiment):
     KEY = "~/picotcpls/t/assets/server.key"
     DROP_SCRIPT = "~/picotcpls/t/ipmininet/tcp_drop.sh"
     RST_SCRIPT = "~/picotcpls/t/ipmininet/tcp_reset_mininet.sh"
-    IFUPDOWN_SCRIPT = "/tutorial/08_tcpls/ifupdown_client.sh"
+    IFUPDOWN_SCRIPT = "/experiments/tcpls/ifupdown_client.sh"
 
     def __init__(self, experiment_parameter_filename, topo, topo_config):
         super(TCPLS, self).__init__(experiment_parameter_filename, topo, topo_config)
